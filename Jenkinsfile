@@ -3,7 +3,7 @@
 
 node {
     stage "Create build output"
-    
+    def info = env.VERSION    
     // Make the output directory.
     sh "mkdir -p output"
 
@@ -17,4 +17,5 @@ node {
     
     // Archive the build output artifacts.
     archiveArtifacts artifacts: 'output/*.txt', excludes: 'output/*.md'
+    echo info
 }
