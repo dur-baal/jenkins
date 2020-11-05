@@ -1,21 +1,40 @@
 #!/usr/bin/env groovy
-// Some fast steps to inspect the build server. Create a pipeline script job and add this:
+pipeline {
+  agent any
 
-node {
-    stage "Create build output"
-    def info = env.VERSION    
-    // Make the output directory.
-    sh "mkdir -p output"
+  stages {
+    stage("Build") {
+      steps {
+        sh 'mvn -v'
+      }
+    }
 
-    // Write an useful file, which is needed to be archived.
-    writeFile file: "output/usefulfile.txt", text: "This file is useful, need to archive it."
+    stage("Testing") {
+      parallel {
+        stage("Unit Tests") {
+          agent { docker 'openjdk:7-jdk-alpine' }
+          steps {
+            sh 'java -version'
+          }
+        }
+        stage("Functional Tests") {
+          agent { docker 'openjdk:8-jdk-alpine' }
+          steps {
+            sh 'java -version'
+          }
+        }
+        stage("Integration Tests") {
+          steps {
+            sh 'java -version'
+          }
+        }
+      }
+    }
 
-    // Write an useless file, which is not needed to be archived.
-    writeFile file: "output/uselessfile.md", text: "This file is useless, no need to archive it."
-
-    stage "Archive build output"
-    
-    // Archive the build output artifacts.
-    archiveArtifacts artifacts: 'output/*.txt', excludes: 'output/*.md'
-    echo info
+    stage("Deploy") {
+      steps {
+        echo "Deploy!"
+      }
+    }
+  }
 }
