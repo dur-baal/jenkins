@@ -9,6 +9,7 @@ pipeline {
       }
     }
 
+/*
     stage("Testing") {
       parallel {
         stage("Unit Tests") {
@@ -30,7 +31,7 @@ pipeline {
         }
       }
     }
-
+*/
     stage("Deploy") {
       steps {
         echo "Deploy!"
