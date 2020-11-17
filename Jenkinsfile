@@ -1,4 +1,7 @@
 #!/usr/bin/env groovy
+
+A_LOG_FILE = 'stage_log.log'
+
 pipeline {
   agent any
 
@@ -34,7 +37,9 @@ pipeline {
 */
     stage("Deploy") {
       steps {
-        echo "Deploy!"
+        tee(A_LOG_FILE){
+          echo "Deploy!"
+        }
       }
     }
   }
