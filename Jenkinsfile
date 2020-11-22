@@ -8,33 +8,24 @@ pipeline {
   stages {
     stage("Build") {
       steps {
-        sh 'mvn -v'
+        script {
+          def output
+          try{
+          timeout(time: 5, unit: 'SECONDS', activity: true){
+            sleep(5)
+          }
+          }catch (any){
+            output = any.toString()
+          } finally {
+            echo "hi there 2!!! - '${output}'"
+          }
+          sh 'mvn -v'
+          def file_name = sh "ls ./"
+          echo "file_name"
+        }
       }
     }
 
-/*
-    stage("Testing") {
-      parallel {
-        stage("Unit Tests") {
-          agent { docker 'openjdk:7-jdk-alpine' }
-          steps {
-            sh 'java -version'
-          }
-        }
-        stage("Functional Tests") {
-          agent { docker 'openjdk:8-jdk-alpine' }
-          steps {
-            sh 'java -version'
-          }
-        }
-        stage("Integration Tests") {
-          steps {
-            sh 'java -version'
-          }
-        }
-      }
-    }
-*/
     stage("Deploy") {
       steps {
         tee(A_LOG_FILE){
