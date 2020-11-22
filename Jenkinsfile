@@ -8,37 +8,35 @@ pipeline {
   stages {
     stage("Build") {
       steps {
-        sh 'mvn -v'
+        script {
+          def output
+            try {
+            timeout(time: 5, unit: 'SECONDS') {
+              try {
+                sleep(30)
+              }
+              catch (err) {
+                echo "For some reason, this catch is activated. Error: ${err.getMessage()}"
+              }
+              echo "This should not be executed, but it is!"
+            }
+          }
+          catch (err) {
+            echo "I expect that this catch will be activated. Error: ${err.getMessage()}"
+          }
+          sh 'mvn -v'
+          def file_name = sh "ls ./"
+          echo "file_name"
+          echo sh(script:'env|sort', returnStdout: true)
+          echo "${env.BUILD_URL}campenta_20System_20Documentation"
+        }
       }
     }
 
-/*
-    stage("Testing") {
-      parallel {
-        stage("Unit Tests") {
-          agent { docker 'openjdk:7-jdk-alpine' }
-          steps {
-            sh 'java -version'
-          }
-        }
-        stage("Functional Tests") {
-          agent { docker 'openjdk:8-jdk-alpine' }
-          steps {
-            sh 'java -version'
-          }
-        }
-        stage("Integration Tests") {
-          steps {
-            sh 'java -version'
-          }
-        }
-      }
-    }
-*/
     stage("Deploy") {
       steps {
         tee(A_LOG_FILE){
-          echo "Deploy!"
+          echo "Deploy! and check"
         }
       }
     }
