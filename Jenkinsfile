@@ -9,6 +9,10 @@ pipeline {
     stage("Build") {
       steps {
         sh 'mvn -v'
+        script{
+          directory_listing = sh ( script: "ls ./", returnStdout: true).trim()
+          echo "files listed here is - ${directory_listing}"
+        }
       }
     }
 
