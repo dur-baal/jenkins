@@ -41,9 +41,11 @@ pipeline {
 */
     stage("Deploy") {
       steps {
-        tee(A_LOG_FILE){
-          echo "Deploy!"
-        }
+        sh 'java -version'
+//        tee(A_LOG_FILE){
+//          echo "WARNING in /var/jenkins/cpp.c (at line: 2) The file contains TAB character, not good."
+//        }
+//        recordIssues(tools: [groovyScript(id: 'id-vhdl-warning', parseId: 'id-vhdl-warnings', pattern: A_LOG_FILE, reportEncoding: 'UTF-8')])
       }
     }
   }
