@@ -3,6 +3,11 @@
 A_LOG_FILE = 'stage_log.log'
 
 pipeline {
+
+  triggers {
+    cron('34 09 * * 1-5')
+  }
+
   agent any
 
   stages {
